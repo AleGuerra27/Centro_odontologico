@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Models\Dentist;
+use App\Models\Hour;
+use App\Models\Day;
 use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
@@ -22,11 +25,21 @@ class AttendanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        return view('horarios.create');
+        $records = $id;
+        return view('horarios.create', compact('records'));
     }
+    public function tables(){
+        $time = Day::all();
+        
+        return compact('time');
+    }
+    public function dentist($id){
+        $dentist = Dentist::where('id',$id)->get();
 
+        return compact('dentist');
+    }
     /**
      * Store a newly created resource in storage.
      *

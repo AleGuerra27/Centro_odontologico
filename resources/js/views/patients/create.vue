@@ -30,26 +30,60 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-6 ">
-                                        <div class="form-group form-group-default">
-                                            <label>DNI</label>
-                                            <input v-model="form.number" name="dnipa" type="text" required class="form-control" maxlength="8" placeholder="Ingrese dni" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>  Tipo de Documento</label>
+                                            <select v-model="form.tipo" @change="changeDocumentType" class="form-control">
+                                                <option v-for="option in document_types" :key="option.id" :value="option.id" :label="option.TipoDocument"></option>
+                                            </select>
                                         </div>
                                     </div>
+                                    <template v-if="enabled_dni">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>DNI</label>
+                                                <div class="input-group">
+                                                    <input v-model="form.number"  type="text" required class="form-control" maxlength="8" placeholder="Ingrese dni" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;">
+                                                    <div class="input-group-prepend">
+                                                        <button class="btn-black btn-border" type="button" @click.prevent="searchPatient">
+                                                            <span class="spinner-border spinner-border-sm" v-if="enabled_spinner"></span>
+                                                            RENIEC
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <template v-if="enabled_ruc">
+                                        <div class="col-md-4 ">
+                                            <div class="form-group">
+                                                <label>RUC</label>
+                                                <div class="input-group">
+                                                    <input v-model="form.number"  type="text" required class="form-control" maxlength="11" placeholder="Ingrese ruc" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;">
+                                                    <div class="input-group-prepend">
+                                                        <button class="btn-black btn-border" type="button" @click.prevent="searchPatient">
+                                                            <span class="spinner-border spinner-border-sm" v-if="enabled_spinner"></span>
+                                                            SUNAT
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
                                     <div class="col-md-6 ">
-                                        <div class="form-group form-group-default">
+                                        <div class="form-group">
                                             <label>Nombre</label>
-                                            <input v-model="form.name" name="nombrep" type="text" class="form-control" required placeholder="Ingrese nombre">
+                                            <input v-model="form.name" name="nombrep" type="text" class="form-control" required placeholder="Nombre y/o Razòn social">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="form-group form-group-default">
+                                        <div class="form-group ">
                                             <label>Dirección</label>
                                             <input v-model="form.address" name="apellidop" type="text" class="form-control" required placeholder="Ingrese dirección">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="form-group form-group-default">
+                                        <div class="form-group ">
                                             <label>Fecha de nacimiento</label>
                                             <div class="input-group">
                                                 <input v-model="form.nacimiento" type="date" class="form-control" id="datepicker" name="datepicker">
@@ -62,23 +96,22 @@
                                         </div>
                                     </div>                                
                                     <div class="col-md-6">
-                                        <div class="form-group form-group-default">
+                                        <div class="form-group">
                                             <label>Teléfono</label>
                                             <input v-model="form.telephone" name="tele" type="text" class="form-control" required maxlength="9" placeholder="Ingrese teléfono" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;">
                                         </div>
                                     </div>                                
                                     <div class="col-md-6">
-                                        <div class="form-group form-group-default">
+                                        <div class="form-group">
                                             <label>Sexo</label>
                                             <select v-model="form.sexo" class="form-control" name="sexo">
                                                 <option value="Masculino">Masculino</option>
                                                 <option value="Femenino">Femenino</option>
-                                        
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="form-group form-group-default">
+                                        <div class="form-group">
                                             <label>Tipo Paciente</label>
                                             <select v-model="form.tratamiento" class="form-control" name="tratamiento">
                                                 <option value=""></option>
@@ -87,7 +120,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="form-group form-group-default">
+                                        <div class="form-group">
                                             <label>Email</label>
                                             <input v-model="form.email" name="email" type="text" class="form-control" required placeholder="Ingrese email">
                                         </div>
@@ -119,6 +152,10 @@
                 resource: 'patients',
                 errors: {},
                 form: {},
+                enabled_dni: true,
+                enabled_spinner: false,
+                enabled_ruc: false,
+                document_types: [],
             }
         },
         async created() {
@@ -136,8 +173,10 @@
                     nacimiento: null,
                     email: null,
                     sexo: null,
+                    tipo: null,
                     tratamiento: null,
                 }
+                this.getRecords();
             },
             async submit() {
                 this.loading_submit = true
@@ -151,6 +190,65 @@
                     .catch(error => {
                         console.log(error)
                     });
+            },
+            async searchPatient(){
+                if(this.form.number === '') {
+                    this.$message.error('Ingresar el número a buscar')
+                    return
+                }
+                let identity_document_type_name = ''
+                let nombres = ''
+                this.form.name = nombres
+                console.log(this.form.tipo)
+                if(this.form.tipo=='6'){
+                    this.enabled_spinner= true
+                    identity_document_type_name = 'ruc'
+                    let response = await this.$http.get(`/Service/${identity_document_type_name}/${this.form.number}`)
+                    console.log(response)
+                    this.enabled_spinner=false
+                    nombres = response.data.person.razonSocial
+                    this.form.address = response.data.person.direccion
+                    this.form.name = nombres
+                    if(response.data.success) {
+                        
+                    } else {
+                        this.$message.error(response.data.message)
+                    }
+                }
+                if(this.form.tipo=='1'){
+                    this.enabled_spinner= true
+                    identity_document_type_name = 'dni'
+                    let response = await this.$http.get(`/Service/${identity_document_type_name}/${this.form.number}`)
+                    console.log(response)
+                    this.enabled_spinner=false
+                    nombres = response.data.person.apellidoPaterno+' '+response.data.person.apellidoMaterno+' '+response.data.person.nombres
+                    this.form.name = nombres
+                        console.log(nombres)
+                    if(response.data.success) {
+                        
+                    } else {
+                        this.$message.error(response.data.message)
+                    }
+                }
+            },
+            getRecords(){
+                this.$http.get(`/${this.resource}/document`).then((response) => {
+                    console.log(response)
+                    this.document_types = response.data.document
+                    this.form.tipo = (this.document_types.length > 0)?this.document_types[0].id:null
+                });
+            },
+            
+            changeDocumentType(){
+                if(this.enabled_dni == false){
+                    this.enabled_dni = true
+                    this.enabled_ruc = false
+                }
+                else{
+                    this.enabled_dni = false
+                    this.enabled_ruc = true
+                }
+                this.form.number = ''
             },
             close() {
                 console.log("xddd")

@@ -62,10 +62,10 @@
                                                 <td>{{row.description}}</td>
                                                 <td>{{row.patient.telephone}}</td>
                                                 <td v-if="row.patient.historia==0"><div class="form-button-action">
-													<button @click.prevent="Aperturar(row.patient_id)" href="#" class="btn btn-link btn-danger btn-lg" title="Aperturar Historia" data-original-title="Delete Task"><i class="fa fa-times"></i></button>
+													<button @click.prevent="Aperturar(row.patient_id)" type="button" class="btn btn-link btn-black btn-lg" title="Aperturar Historia"><i class="fa fa-id-card" aria-hidden="true"></i></button>
 								                </div></td>
                                                 <td v-else>
-                                                    <button @click.prevent="Actualizar(row.patient_id)" href="#" class="btn btn-link btn-danger btn-lg" title="Actualizar Historia" data-original-title="Delete Task"><i class="fa fa-times"></i></button>
+                                                    <button @click.prevent="Actualizar(row.patient_id)" href="#" class="btn btn-link btn-lg" title="Actualizar Historia" data-original-title="Delete Task"><i class="fa fa-eye" aria-hidden="true"></i></button>
                                                 </td>
                                             </tr>
                                         </tbody>

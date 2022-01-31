@@ -17,9 +17,12 @@ class CreateSchedulesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('dentist_id');
             $table->date('fecha');
-            $table->time('inicio');
-            $table->time('fin');
+            $table->time('InicioMañana');
+            $table->time('FinMañana');
+            $table->time('InicioTarde');
+            $table->time('FinTarde');
             $table->string('description');
+            $table->integer('estado')->default(0);
             $table->timestamps();
 
             $table->foreign('dentist_id')->references('id')->on('dentists');

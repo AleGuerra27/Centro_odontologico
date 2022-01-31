@@ -2,7 +2,7 @@
     <div class="content">
         <div class="page-inner">
             <div class="page-header">
-                <h4 class="page-title">Citas</h4>
+                <h4 class="page-title">Productos</h4>
                 <ul class="breadcrumbs">
                     <li class="nav-home">
                         <a href="../view/admin/admin.php">
@@ -24,22 +24,11 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex align-items-center">
-                                <h4 class="card-title">Listado de Odontólogos</h4>
+                                <h4 class="card-title">Listado de Productos</h4>
                                 <a href="#" @click.prevent="Nuevo()" class="btn btn-primary btn-round ml-auto">Nuevo</a>
                             </div>
                             <div class="card-tools">
-                                <a href="../view/specialty/reporte.php" class="btn btn-info btn-border btn-round btn-sm mr-2">
-                                    <span class="btn-label">
-                                        <i class="fa fa-pencil"></i>
-                                    </span>
-                                    Export
-                                </a>
-                                <a href="#" class="btn btn-info btn-border btn-round btn-sm">
-                                    <span class="btn-label">
-                                        <i class="fa fa-print"></i>
-                                    </span>
-                                    Print
-                                </a>
+                                
                             </div>
                             <div class="card-body">                                                
                                 <div class="table-responsive">
@@ -47,20 +36,25 @@
                                         <thead>
                                             <tr role="row">
                                                 <th>#</th>
+                                                <th>Unidad</th>
                                                 <th>Nombre</th>
-                                                <th>DNI</th>
-                                                <th>Teléfono</th>
-                                                <th>Acción</th>
+                                                <th>Stock</th>
+                                                <th>P.Unitario (Venta)</th>
+                                                <th>Tiene Igv (Venta)</th>
+                                                <th>Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="(row, index) in form.dentist" role="row">
+                                            <tr v-for="(row, index) in form.items" role="row">
                                                 <td>{{index}}</td>
+                                                <td>{{row.unit_type_id}}</td>
                                                 <td>{{row.name}}</td>
-                                                <td>{{row.number}}</td>
-                                                <td>{{row.telephone}}</td>
+                                                <td>{{row.stock}}</td>
+                                                <td>{{row.sale_unit_price}}</td>
+                                                <td>{{row.has_igv}}</td>
                                                 <td><div class="form-button-action">
-				                                    <a href="#" @click.prevent="Horarios(row.id)" title="Ver Horarios" class="btn btn-link btn-primary btn-lg"><i class="fa fa-eye" aria-hidden="true"></i></a>
+				                                    <a href="#" title="Editar" class="btn btn-link btn-primary btn-lg"><i class="fa fa-edit"></i></a>
+													<button href="#" class="btn btn-link btn-danger btn-lg" title="" data-original-title="Delete Task"><i class="fa fa-times"></i></button>
 								                </div></td>
                                             </tr>
                                         </tbody>
@@ -79,7 +73,7 @@
         data(){
             return{
                 loading_submit: false,
-                resource: 'dentist',
+                resource: 'Items',
                 errors: {},
                 form: {},
             }
@@ -91,28 +85,16 @@
         methods:{
             initForm() {
                 this.errors = {}
-                this.form = {
-                    id: null,
-                    number: '',
-                    name: null,
-                    address: null,
-                    telephone: null,
-                    nacimiento: null,
-                    email: null,
-                    sexo: null,
-                }
+                this.form = {}
             },
             getRecords(){
-                this.$http.get(`/${this.resource}/tables`).then((response) => {
-                    console.log(response)
+                this.$http.get(`/${this.resource}/table`).then((response) => {
                     this.form = response.data
+                    console.log(response)
                 });
             },
             Nuevo(){
-                location.href = '/dentist/create'
-            },
-            Horarios(doctor){
-                location.href = `/Horarios/create/${doctor}`
+                location.href = '/items/create'
             },
         }
     }

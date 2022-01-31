@@ -49,6 +49,9 @@
   Vue.component('horarios-index', require('./views/horarios/index.vue').default);
   Vue.component('horarios-create', require('./views/horarios/create.vue').default);
 
+  //Vistas para items
+  Vue.component('items-index', require('./views/items/index.vue').default);
+  Vue.component('items-create', require('./views/items/create.vue').default);
 
  const app = new Vue({
      el: '#main-wrapper'

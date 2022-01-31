@@ -70,15 +70,18 @@
                                             <input v-model="form.monto" type="text" required class="form-control" maxlength="8" placeholder="Ingrese monto" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;">
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Descripción</label>
-                                            <input v-model="form.description" type="text" required class="form-control">
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             
+                            <div class="card-action">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <button type="button" class="btn waves-effect waves-light btn-primary" data-toggle="modal" data-target="#exampleModal"  @click.prevent="clickAddItemInvoice">
+                                            + Agregar Servicio
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="card-action">
                                 <div class="col-md-4 ml-auto mr-auto">
                                     <button type="button" class="btn btn-default" @click.prevent="close()"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
@@ -92,11 +95,15 @@
                 
             </div>
         </div>
+        <items :showDialog.sync="showDialogPayments"
+                           @add="addPayments"></items>
     </form>
 </template>
 <script>
+    import items from './item/items.vue'
     import VueSweetalert2 from 'vue-sweetalert2';
     export default {
+        components: {items},
         data(){
             return{
                 loading_submit: false,
@@ -104,6 +111,7 @@
                 errors: {},
                 form: {},
                 dentist: [],
+                showDialogPayments: false,
                 customers: [],
             }
         },
@@ -139,6 +147,12 @@
                     this.patient = response.data.customers
                     this.dentist = response.data.dentist
                 });
+            },
+            addPayments(){
+                
+            },
+            clickAddItemInvoice(){
+
             },
             async submit() {
                 this.orders.patient_id = this.form.patient_id

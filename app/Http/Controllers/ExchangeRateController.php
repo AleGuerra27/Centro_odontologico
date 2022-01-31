@@ -2,31 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Patient;
-use App\Models\Number;
+use App\Models\Exchange_rate;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 
-class PatientController extends Controller
+class ExchangeRateController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
-
     public function index()
     {
-        return view('patients.index');
+        //
     }
-    public function document(){
-        $document = Number::all();
-        return compact('document');
-    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -34,14 +24,9 @@ class PatientController extends Controller
      */
     public function create()
     {
-        return view('patients.create');
+        //
     }
 
-    public function tables()
-    {
-        $patients = Patient::all();
-        return compact('patients');
-    }
     /**
      * Store a newly created resource in storage.
      *
@@ -50,19 +35,16 @@ class PatientController extends Controller
      */
     public function store(Request $request)
     {
-        $id = $request->input('id');
-        $patient = Patient::firstOrNew(['id' => $id]);
-        $patient->fill($request->all());
-        $patient->save();
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\patient  $patient
+     * @param  \App\Models\Exchange_rate  $exchange_rate
      * @return \Illuminate\Http\Response
      */
-    public function show(patient $patient)
+    public function show(Exchange_rate $exchange_rate)
     {
         //
     }
@@ -70,10 +52,10 @@ class PatientController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\patient  $patient
+     * @param  \App\Models\Exchange_rate  $exchange_rate
      * @return \Illuminate\Http\Response
      */
-    public function edit(patient $patient)
+    public function edit(Exchange_rate $exchange_rate)
     {
         //
     }
@@ -82,10 +64,10 @@ class PatientController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\patient  $patient
+     * @param  \App\Models\Exchange_rate  $exchange_rate
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, patient $patient)
+    public function update(Request $request, Exchange_rate $exchange_rate)
     {
         //
     }
@@ -93,10 +75,10 @@ class PatientController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\patient  $patient
+     * @param  \App\Models\Exchange_rate  $exchange_rate
      * @return \Illuminate\Http\Response
      */
-    public function destroy(patient $patient)
+    public function destroy(Exchange_rate $exchange_rate)
     {
         //
     }

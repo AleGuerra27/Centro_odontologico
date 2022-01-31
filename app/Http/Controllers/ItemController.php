@@ -2,31 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Patient;
-use App\Models\Number;
+use App\Models\Item;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use App\Models\Unit_type;
+use App\Models\Affectation_igv_type;
+use App\Models\Currency_type;
+use App\Models\Warehouse;
 
-class PatientController extends Controller
+class ItemController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
-
     public function index()
     {
-        return view('patients.index');
+        return view('items.index');
     }
-    public function document(){
-        $document = Number::all();
-        return compact('document');
-    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -34,13 +28,21 @@ class PatientController extends Controller
      */
     public function create()
     {
-        return view('patients.create');
+        return view('items.create');
     }
 
     public function tables()
     {
-        $patients = Patient::all();
-        return compact('patients');
+        $currency_types = Currency_type::all();
+        $unit_types = Unit_type::all();
+        $affectation_igv_types = Affectation_igv_type::all();
+        $warehouses = Warehouse::all();
+        return compact ( 'currency_types','unit_types','affectation_igv_types','warehouses');
+    }
+    public function table()
+    {
+        $items = Item::all();
+        return compact ('items');
     }
     /**
      * Store a newly created resource in storage.
@@ -48,21 +50,21 @@ class PatientController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
+
         $id = $request->input('id');
-        $patient = Patient::firstOrNew(['id' => $id]);
-        $patient->fill($request->all());
-        $patient->save();
+        $item = Item::firstOrNew(['id' => $id]);
+        $item->fill($request->all());
+        $item->save();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\patient  $patient
+     * @param  \App\Models\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function show(patient $patient)
+    public function show(Item $item)
     {
         //
     }
@@ -70,10 +72,10 @@ class PatientController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\patient  $patient
+     * @param  \App\Models\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function edit(patient $patient)
+    public function edit(Item $item)
     {
         //
     }
@@ -82,10 +84,10 @@ class PatientController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\patient  $patient
+     * @param  \App\Models\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, patient $patient)
+    public function update(Request $request, Item $item)
     {
         //
     }
@@ -93,10 +95,10 @@ class PatientController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\patient  $patient
+     * @param  \App\Models\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function destroy(patient $patient)
+    public function destroy(Item $item)
     {
         //
     }

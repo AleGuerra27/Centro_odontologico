@@ -1,5 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-<horarios-create></horarios-create>
+<horarios-create :records="{{json_encode($records)}}"></horarios-create>
 @endsection
