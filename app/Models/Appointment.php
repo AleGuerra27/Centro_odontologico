@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Appointment extends Model
 {
     protected $table = 'appointments';
-    protected $with = 'patient';
+    protected $with = ['patient','items'];
     protected $fillable = [        
         'date_of_treatment',
         'start_time',
@@ -24,5 +24,9 @@ class Appointment extends Model
     public function patient()
     {
         return $this->belongsTo(Patient::class);
+    }
+    public function items()
+    {
+        return $this->hasMany(Appointment_item::class);
     }
 }

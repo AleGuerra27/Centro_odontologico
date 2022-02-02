@@ -74,9 +74,33 @@
                             </div>
                             
                             <div class="card-action">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table  class="display table table-striped table-hover dataTable" role="grid" aria-describedby="add-row_info">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th>#</th>
+                                                    <th>Unidad</th>
+                                                    <th>Producto/Servicio</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody v-if="form.item.length > 0">
+                                                <tr v-for="(row, index) in form.item" :key="index">
+                                                    <td>{{index + 1}}</td>
+                                                    <td>{{row.item[0].unit_type_id}}</td>
+                                                    <td>{{row.item[0].name}}</td>
+                                                    <td class="text-right">{{row.quantity}}</td>
+                                                    <td class="text-right">{{row.total}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <button type="button" class="btn waves-effect waves-light btn-primary" data-toggle="modal" data-target="#exampleModal"  @click.prevent="clickAddItemInvoice">
+                                        <button type="button" class="btn waves-effect waves-light btn-primary" data-toggle="modal" data-target="#exampleModal"  @click.prevent="ClickAddItem">
                                             + Agregar Servicio
                                         </button>
                                     </div>
@@ -95,8 +119,8 @@
                 
             </div>
         </div>
-        <items :showDialog.sync="showDialogPayments"
-                           @add="addPayments"></items>
+        <items :showDialogPayments="showDialogPayments"
+                           @add="addRow"></items>
     </form>
 </template>
 <script>
@@ -130,7 +154,8 @@
                     start_time: null,
                     end_time: null,
                     description: null,
-                    monto: 0,                    
+                    monto: 0,
+                    item: [],
                 }
                 this.orders= {
                     id : null,
@@ -149,10 +174,17 @@
                 });
             },
             addPayments(){
-                
+                console.log("14785")
             },
-            clickAddItemInvoice(){
-
+            ClickAddItem(){
+                
+                this.showDialogPayments = true
+            },
+            addRow(row){
+                this.showDialogPayments = false
+                console.log(row)
+                this.form.item.push(JSON.parse(JSON.stringify(row)));
+                this.form.monto = this.form.monto + row.total
             },
             async submit() {
                 this.orders.patient_id = this.form.patient_id

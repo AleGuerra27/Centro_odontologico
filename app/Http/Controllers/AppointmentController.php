@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Appointment_item;
 use App\Models\Dentist;
 use App\Models\Patient;
 use App\Models\Document;
@@ -45,9 +46,17 @@ class AppointmentController extends Controller
     public function store(Request $request)
     {
         $id = $request->input('id');
-        $patient = Appointment::firstOrNew(['id' => $id]);
-        $patient->fill($request->all());
-        $patient->save();
+        $appointment = Appointment::firstOrNew(['id' => $id]);
+        $appointment->fill($request->all());
+        $appointment->save();
+        foreach ($request['item'] as $row)
+        {
+            // $doc->items()->create($row);
+            $p_item = new Appointment_item;
+            $p_item->fill($row);
+            $p_item->appointment_id = $appointment->id;
+            $p_item->save();
+        }
     }
 
     /**

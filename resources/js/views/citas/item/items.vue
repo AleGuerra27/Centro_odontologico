@@ -1,6 +1,6 @@
 <template>
-    <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+    <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+        <div class="modal-dialog modal-lg" role="document" >
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Agregar Producto o Servicio</h5>
@@ -25,7 +25,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Afectación Igv</label>
-                                <select v-model="form.sale_affectation_igv_type_id" @change="changeAffectationIgvType" class="form-control">
+                                <select v-model="form.affectation_igv_type_id" class="form-control">
                                     <option v-for="option in affectation_igv_types" :key="option.id" :value="option.id" :label="option.description"></option>
                                 </select>
                                 <div class="custom-control custom-checkbox">
@@ -59,14 +59,17 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-primary"  @click.prevent="addRow" data-dismiss="modal">Agregar</button>
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script>
+    import moment from 'moment'
+    import {calculateRowItem} from '../../../helpers/functions'
     export default {
+        props: ['showDialogPayments'],
         data(){
             return{
                 loading_submit: false,
@@ -88,6 +91,7 @@
                     console.log(response)
                     this.all_items = response.data.items
                     this.items = response.data.items
+                    this.RateByDate()
                 })
         },
         methods: {
@@ -102,6 +106,7 @@
                     has_isc: false,
                     system_isc_type_id: null,
                     percentage_isc: 0,
+                    date_of_issue: moment().format('YYYY-MM-DD'),
                     suggested_price: 0,
                     quantity: 1,
                     readonly_total: 0,
@@ -113,9 +118,15 @@
                     warehouse_id:null,
                     document_item_id: null,
                 }
+                this.exchange_rate_sale = 0,
                 this.show_has_igv = true
                 this.purchase_show_has_igv = true
                 this.enabled_percentage_of_profit = false
+            },
+            async RateByDate() {
+              
+                let response = await this.$http.get(`/Service/exchange_rate/${this.form.date_of_issue}`)
+                this.exchange_rate_sale = response.data.exchange.venta
             },
             getAffectationIgv(){
                 this.$http.get(`/${this.resource}/tables`)
@@ -127,14 +138,31 @@
             calculateQuantity(){
                 this.readonly_total = _.round((this.form.quantity * this.form.unit_price_value), 4)
             },
+            addRow(){
+                let unit_price = (this.form.has_igv)?this.form.unit_price_value:this.form.unit_price_value*1.18;
+                this.form.unit_price = unit_price;
+                this.form.item.unit_price = unit_price;
+                this.filter = parseInt(this.form.affectation_igv_type_id)
+                this.form.affectation_igv_type = _.filter(this.affectation_igv_types, {'id': this.filter});
+                console.log(this.form.affectation_igv_type )
+                this.currencyTypeIdActive == 'PEN'
+                console.log(this.form)
+                this.row = calculateRowItem(this.form, this.currencyTypeIdActive, this.exchange_rate_sale);
+                this.initForm()
+                this.$emit('add', this.row);
+            },
             changeItem(item_id){
                 let item = item_id
                 this.form.sale_affectation_igv_type_id = null
+                console.log(this.all_items,item)
                 this.itemss = _.filter(this.all_items, {'id': item});
                 console.log(this.itemss)
                 this.form.unit_price_value = this.itemss[0].sale_unit_price
-                this.form.sale_affectation_igv_type_id = (this.itemss.length > 0)?this.itemss[0].sale_affectation_igv_type_id:null
+                this.form.has_igv = this.itemss[0].has_igv;
+                this.form.affectation_igv_type_id = this.itemss[0].sale_affectation_igv_type_id;
+                console.log(this.form.affectation_igv_type_id)
                 this.readonly_total = _.round((this.form.quantity * this.form.unit_price_value), 4)
+                this.form.item = this.itemss
             },
             async submit() {
                 this.loading_submit = true
@@ -148,17 +176,6 @@
                     .catch(error => {
                         console.log(error)
                     });
-            },
-            changeAffectationIgvType(){
-                let affectation_igv_type_exonerated = [20,21,30,31,32,33,34,35,36,37]
-                let is_exonerated = affectation_igv_type_exonerated.includes((parseInt(this.form.sale_affectation_igv_type_id)));
-
-                if(is_exonerated){
-                    this.show_has_igv = false
-                    this.form.has_igv = true
-                }else{
-                    this.show_has_igv = true
-                }
             },
             close() {
                 console.log("xddd")

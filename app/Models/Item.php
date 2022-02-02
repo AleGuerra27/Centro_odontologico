@@ -17,7 +17,7 @@ class Item extends Model
         'internal_id',
         'item_code',
         'item_code_gs1',
-        'unit_type_id' => 'string',
+        'unit_type_id',
         'currency_type_id',
         'sale_unit_price',
         'purchase_unit_price',
