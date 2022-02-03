@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Appointment_item extends Model
 {
-    protected $with = ['affectation_igv_type'];
     public $timestamps = false;
 
     protected $fillable = [
