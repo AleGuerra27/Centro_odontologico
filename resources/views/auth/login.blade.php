@@ -20,7 +20,7 @@
         </div>
         <div class="contenido-login">
 
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="/login">
                 @csrf
                 <img src="../../Atlantis/assets/img/logo.png" alt="">
                 <h2>Login</h2>
@@ -30,7 +30,7 @@
                     </div>
                     <div class="div">
 
-                        <input type="email"  id="email"  required placeholder="CORREO O USUARIOS">
+                        <input type="email"  id="email" name="email"  required placeholder="CORREO O USUARIOS">
                         @error('email')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -44,7 +44,7 @@
                     </div>
                     <div class="div">
 
-                        <input type="password" placeholder="CONTRASEÑA"  id="password" required >
+                        <input type="password" placeholder="CONTRASEÑA"  id="password" name="password" required >
                             @error('password')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -52,7 +52,7 @@
                             @enderror
                     </div>
                 </div>
-                <input type="button" class="btn" name="button" id="login" value="Iniciar sesion">
+                <input type="submit" class="btn" name="button" id="login" value="Iniciar sesion">
         
             </form>
 
