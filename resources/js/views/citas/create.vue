@@ -184,6 +184,7 @@
                 this.showDialogPayments = false
                 console.log(row)
                 this.form.item.push(JSON.parse(JSON.stringify(row)));
+                console.log(this.form.item)
                 this.form.monto = this.form.monto + row.total
             },
             async submit() {

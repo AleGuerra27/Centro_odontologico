@@ -17,7 +17,7 @@ class CreateAppointmentItemsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('appointment_id');
             $table->unsignedInteger('item_id');
-            $table->json('item');
+            // $table->json('item');
             $table->integer('quantity');
             $table->decimal('unit_value', 12, 2);
 

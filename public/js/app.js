@@ -5471,6 +5471,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.showDialogPayments = false;
       console.log(row);
       this.form.item.push(JSON.parse(JSON.stringify(row)));
+      console.log(this.form.item);
       this.form.monto = this.form.monto + row.total;
     },
     submit: function submit() {
@@ -9209,6 +9210,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 function calculateRowItem(row_old, currency_type_id_new, exchange_rate_sale) {
   // console.log(currency_type_id_new, exchange_rate_sale)
+  console.log(row_old);
   var currency_type_id_old = row_old.currency_type_id;
   var unit_price = parseFloat(row_old.unit_price); // } else {
   //     unit_price = parseFloat(row_old.item.unit_price) * 1.18
@@ -9261,7 +9263,7 @@ function calculateRowItem(row_old, currency_type_id_new, exchange_rate_sale) {
 
 
   var row = {
-    item_id: row_old.item.id,
+    item_id: row_old.item_id,
     // item_description: row_old.item.description,
     item: row_old.item,
     currency_type_id: currency_type_id_new,

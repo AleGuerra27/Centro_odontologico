@@ -13,7 +13,6 @@ class Appointment_item extends Model
     protected $fillable = [
         'appointment_id',
         'item_id',
-        'item',
         'quantity',
         'unit_value',
 

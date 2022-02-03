@@ -1,7 +1,7 @@
 function calculateRowItem(row_old, currency_type_id_new, exchange_rate_sale) {
 
     // console.log(currency_type_id_new, exchange_rate_sale)
-
+    console.log(row_old)
     let currency_type_id_old = row_old.currency_type_id
     let unit_price = parseFloat(row_old.unit_price)
     // } else {
@@ -56,7 +56,7 @@ function calculateRowItem(row_old, currency_type_id_new, exchange_rate_sale) {
     // $table->json('discounts')->nullable();
 
     let row = {
-        item_id: row_old.item.id,
+        item_id: row_old.item_id,
         // item_description: row_old.item.description,
         item: row_old.item,
         currency_type_id: currency_type_id_new,
